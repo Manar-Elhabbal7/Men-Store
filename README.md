@@ -17,7 +17,7 @@ A sleek, modern, and responsive men's fashion e-commerce mobile application buil
 - **Networking**: [Dio](https://pub.dev/packages/dio) for asynchronous network requests.
 - **Architecture**: Modular feature-based structure (`auth`, `home`, `core`).
 
-##  Screenshots
+##  Screens
 
 <table>
   <tr>
