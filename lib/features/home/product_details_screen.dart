@@ -35,7 +35,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     const SizedBox(height: 10),
                     Center(
                       child: Container(
-                        height: 380,
+                        height: 300,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: AppColors.fill,

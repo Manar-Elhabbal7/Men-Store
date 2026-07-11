@@ -42,7 +42,35 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<ProductModel> get _filteredProducts {
     if (_selectedCategory == 'All') return _products;
-    return _products.where((p) => p.category.name.toLowerCase().contains(_selectedCategory.toLowerCase())).toList();
+    final categoryLower = _selectedCategory.toLowerCase();
+
+    return _products.where((product) {
+      final titleLower = product.title.toLowerCase();
+      final descLower = product.description.toLowerCase();
+      final catNameLower = product.category.name.toLowerCase();
+
+      if (categoryLower == 'tshirts') {
+        final keywords = ['t-shirt', 'tshirt', 'tee', 'shirt', 'polo'];
+        return keywords.any((keyword) =>
+            titleLower.contains(keyword) ||
+            descLower.contains(keyword) ||
+            catNameLower.contains(keyword));
+      } else if (categoryLower == 'jeans') {
+        final keywords = ['jeans', 'pants', 'chino', 'shorts', 'denim', 'trousers'];
+        return keywords.any((keyword) =>
+            titleLower.contains(keyword) ||
+            descLower.contains(keyword) ||
+            catNameLower.contains(keyword));
+      } else if (categoryLower == 'shoes') {
+        final keywords = ['shoes', 'shoe', 'sneaker'];
+        return keywords.any((keyword) =>
+            titleLower.contains(keyword) ||
+            descLower.contains(keyword) ||
+            catNameLower.contains(keyword));
+      }
+
+      return catNameLower.contains(categoryLower);
+    }).toList();
   }
 
   @override
