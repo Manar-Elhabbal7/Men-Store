@@ -5,6 +5,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_form_field.dart';
 import '../../../core/widgets/app_password_field.dart';
+import '../../home/home_screen.dart';
 import 'cubit/signup_cubit.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -41,11 +42,12 @@ class _SignupScreenState extends State<SignupScreen> {
               type: AnimatedSnackBarType.success,
               mobileSnackBarPosition: MobileSnackBarPosition.bottom,
             ).show(context);
-            // Go back to login screen on successful signup
-            final navigator = Navigator.of(context);
-            Future.delayed(const Duration(milliseconds: 500), () {
-              navigator.pop();
-            });
+            // Go to home screen on successful signup
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+              (route) => false,
+            );
           } else if (state is SignupFailure) {
             AnimatedSnackBar.material(
               state.error,

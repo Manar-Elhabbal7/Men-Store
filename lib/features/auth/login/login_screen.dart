@@ -5,6 +5,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_form_field.dart';
 import '../../../core/widgets/app_password_field.dart';
+import '../../home/home_screen.dart';
 import '../signup/signup_screen.dart';
 import 'cubit/login_cubit.dart';
 
@@ -38,6 +39,11 @@ class _LoginScreenState extends State<LoginScreen> {
               type: AnimatedSnackBarType.success,
               mobileSnackBarPosition: MobileSnackBarPosition.bottom,
             ).show(context);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+              (route) => false,
+            );
           } else if (state is LoginFailure) {
             AnimatedSnackBar.material(
               state.error,
