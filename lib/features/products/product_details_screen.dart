@@ -1,3 +1,4 @@
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../models/product_model.dart';
@@ -46,7 +47,13 @@ class ProductDetailsScreen extends StatelessWidget {
                           child: Image.network(
                             product.images.first,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.image_not_supported, size: 50)),
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Center(
+                                  child: Icon(
+                                    Icons.image_not_supported,
+                                    size: 50,
+                                  ),
+                                ),
                           ),
                         ),
                       ),
@@ -66,12 +73,18 @@ class ProductDetailsScreen extends StatelessWidget {
                         const SizedBox(width: 6),
                         const Text(
                           '4.0/5',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
                         ),
                         const SizedBox(width: 8),
                         Text(
                           '(45 reviews)',
-                          style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 16,
+                          ),
                         ),
                       ],
                     ),
@@ -94,7 +107,9 @@ class ProductDetailsScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
             decoration: BoxDecoration(
               color: AppColors.white,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(30),
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.05),
@@ -112,7 +127,11 @@ class ProductDetailsScreen extends StatelessWidget {
                   children: [
                     const Text(
                       'Price',
-                      style: TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -129,11 +148,23 @@ class ProductDetailsScreen extends StatelessWidget {
                   child: SizedBox(
                     height: 60,
                     child: ElevatedButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.shopping_bag_outlined, color: Colors.white),
+                      onPressed: () {
+                        AnimatedSnackBar.material(
+                          'Added to Cart successfully!',
+                          type: AnimatedSnackBarType.success,
+                          mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                        ).show(context);
+                      },
+                      icon: const Icon(
+                        Icons.shopping_bag_outlined,
+                        color: Colors.white,
+                      ),
                       label: const Text(
                         'Add to Cart',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,

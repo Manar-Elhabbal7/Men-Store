@@ -23,8 +23,11 @@ class ProductModel {
       title: json['title']?.toString() ?? '',
       price: int.tryParse(json['price']?.toString() ?? '') ?? 0,
       description: json['description']?.toString() ?? '',
-      images: (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
-      category: CategoryModel.fromJson(json['category'] as Map<String, dynamic>? ?? {}),
+      images:
+          (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      category: CategoryModel.fromJson(
+        json['category'] as Map<String, dynamic>? ?? {},
+      ),
     );
   }
 }

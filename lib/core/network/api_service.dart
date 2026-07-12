@@ -34,7 +34,8 @@ class ApiService {
       );
       return response;
     } on DioException catch (e) {
-      final String errorMessage = e.response?.data?['message']?.toString() ??
+      final String errorMessage =
+          e.response?.data?['message']?.toString() ??
           e.response?.data?.toString() ??
           e.message ??
           'Network error occurred';

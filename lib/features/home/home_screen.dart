@@ -39,10 +39,7 @@ class _HomeScreenViewState extends State<HomeScreenView> {
             const SizedBox(height: 20),
             const Text(
               'Discover',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             Row(
@@ -70,7 +67,11 @@ class _HomeScreenViewState extends State<HomeScreenView> {
                     color: AppColors.primary,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(Icons.tune, color: AppColors.white, size: 24),
+                  child: const Icon(
+                    Icons.tune,
+                    color: AppColors.white,
+                    size: 24,
+                  ),
                 ),
               ],
             ),
@@ -88,26 +89,45 @@ class _HomeScreenViewState extends State<HomeScreenView> {
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
                             itemCount: state.categories.length,
-                            separatorBuilder: (context, index) => const SizedBox(width: 10),
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(width: 10),
                             itemBuilder: (context, index) {
                               final category = state.categories[index];
-                              final isSelected = state.selectedCategory.id == category.id;
+                              final isSelected =
+                                  state.selectedCategory.id == category.id;
                               return GestureDetector(
                                 onTap: () {
-                                  context.read<HomeCubit>().selectCategory(category);
+                                  context.read<HomeCubit>().selectCategory(
+                                    category,
+                                  );
                                 },
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 22,
+                                    vertical: 8,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: isSelected ? AppColors.primary : AppColors.white,
+                                    color: isSelected
+                                        ? AppColors.primary
+                                        : AppColors.white,
                                     borderRadius: BorderRadius.circular(10),
-                                    border: isSelected ? null : Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+                                    border: isSelected
+                                        ? null
+                                        : Border.all(
+                                            color: AppColors.border.withValues(
+                                              alpha: 0.5,
+                                            ),
+                                          ),
                                   ),
                                   child: Text(
                                     category.name,
                                     style: TextStyle(
-                                      color: isSelected ? Colors.white : Colors.black54,
-                                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Colors.black54,
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.w500,
                                     ),
                                   ),
                                 ),
@@ -122,12 +142,13 @@ class _HomeScreenViewState extends State<HomeScreenView> {
                               : GridView.builder(
                                   itemCount: state.products.length,
                                   padding: const EdgeInsets.only(bottom: 20),
-                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    childAspectRatio: 0.72,
-                                    crossAxisSpacing: 15,
-                                    mainAxisSpacing: 20,
-                                  ),
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        childAspectRatio: 0.72,
+                                        crossAxisSpacing: 15,
+                                        mainAxisSpacing: 20,
+                                      ),
                                   itemBuilder: (context, index) {
                                     final product = state.products[index];
                                     return GestureDetector(
@@ -135,25 +156,41 @@ class _HomeScreenViewState extends State<HomeScreenView> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => ProductDetailsScreen(product: product),
+                                            builder: (context) =>
+                                                ProductDetailsScreen(
+                                                  product: product,
+                                                ),
                                           ),
                                         );
                                       },
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Expanded(
                                             child: Container(
                                               decoration: BoxDecoration(
                                                 color: AppColors.fill,
-                                                borderRadius: BorderRadius.circular(20),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
                                               ),
                                               child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(20),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
                                                 child: Image.network(
                                                   product.images.first,
                                                   fit: BoxFit.cover,
-                                                  errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.image_not_supported)),
+                                                  errorBuilder:
+                                                      (
+                                                        context,
+                                                        error,
+                                                        stackTrace,
+                                                      ) => const Center(
+                                                        child: Icon(
+                                                          Icons
+                                                              .image_not_supported,
+                                                        ),
+                                                      ),
                                                 ),
                                               ),
                                             ),
@@ -209,10 +246,14 @@ class _HomeScreenViewState extends State<HomeScreenView> {
     if (_selectedIndex == 0) {
       body = _buildHomeBody(context);
     } else if (_selectedIndex == 1) {
-      body = const MyCart();
+      body = MyCart(
+        onBackToHome: () => setState(() => _selectedIndex = 0),
+      );
     } else {
       //todo: add account screen
-      body = const AccountScreen();
+      body = AccountScreen(
+        onBackToHome: () => setState(() => _selectedIndex = 0),
+      );
     }
 
     return Scaffold(

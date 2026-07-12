@@ -19,13 +19,11 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       final response = await _apiService.post(
         'auth/login',
-        data: {
-          'email': email.trim(),
-          'password': password.trim(),
-        },
+        data: {'email': email.trim(), 'password': password.trim()},
       );
 
-      if ((response.statusCode == 200 || response.statusCode == 201) && response.data != null) {
+      if ((response.statusCode == 200 || response.statusCode == 201) &&
+          response.data != null) {
         emit(LoginSuccess('Login Successfully!'));
       } else {
         emit(LoginFailure('Failed to login. Please try again.'));
@@ -39,7 +37,11 @@ class LoginCubit extends Cubit<LoginState> {
           errorMsg.toLowerCase().contains('timeout') ||
           errorMsg.toLowerCase().contains('failed host lookup') ||
           errorMsg.toLowerCase().contains('socketexception')) {
-        emit(LoginFailure('Network connection error. Please check your internet connection and try again.'));
+        emit(
+          LoginFailure(
+            'Network connection error. Please check your internet connection and try again.',
+          ),
+        );
       } else {
         emit(LoginFailure(errorMsg));
       }

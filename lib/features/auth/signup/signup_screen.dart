@@ -5,7 +5,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_form_field.dart';
 import '../../../core/widgets/app_password_field.dart';
-import '../../home/home_screen.dart';
+import '../login/login_screen.dart';
 import 'cubit/signup_cubit.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -19,7 +19,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -42,10 +43,10 @@ class _SignupScreenState extends State<SignupScreen> {
               type: AnimatedSnackBarType.success,
               mobileSnackBarPosition: MobileSnackBarPosition.bottom,
             ).show(context);
-            // Go to home screen on successful signup
+            // Go to login screen on successful signup
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
               (route) => false,
             );
           } else if (state is SignupFailure) {
@@ -189,7 +190,10 @@ class _SignupScreenState extends State<SignupScreen> {
                             child: RichText(
                               text: const TextSpan(
                                 text: "Already have an account? ",
-                                style: TextStyle(color: Colors.black54, fontSize: 14),
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 14,
+                                ),
                                 children: [
                                   TextSpan(
                                     text: 'Log In',

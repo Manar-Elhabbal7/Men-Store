@@ -26,22 +26,28 @@ class HomeCubit extends Cubit<HomeState> {
         _allCategory,
         ...categoriesData
             .map((e) => CategoryModel.fromJson(e))
-            .where((c) =>
-                !c.name.toLowerCase().contains('testing') &&
-                !c.name.toLowerCase().contains('test')),
+            .where(
+              (c) =>
+                  !c.name.toLowerCase().contains('testing') &&
+                  !c.name.toLowerCase().contains('test'),
+            ),
       ];
 
       // Fetch products
       final productsResponse = await _apiService.get('products');
       final List productsData = productsResponse.data;
-      final products = productsData.map((e) => ProductModel.fromJson(e)).toList();
+      final products = productsData
+          .map((e) => ProductModel.fromJson(e))
+          .toList();
 
-      emit(HomeLoaded(
-        categories: categories,
-        products: products,
-        selectedCategory: _allCategory,
-        isLoadingProducts: false,
-      ));
+      emit(
+        HomeLoaded(
+          categories: categories,
+          products: products,
+          selectedCategory: _allCategory,
+          isLoadingProducts: false,
+        ),
+      );
     } catch (e) {
       emit(HomeError(e.toString().replaceAll('Exception: ', '')));
     }
@@ -50,26 +56,33 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> selectCategory(CategoryModel category) async {
     final currentState = state;
     if (currentState is HomeLoaded) {
-      emit(currentState.copyWith(
-        selectedCategory: category,
-        isLoadingProducts: true,
-      ));
+      emit(
+        currentState.copyWith(
+          selectedCategory: category,
+          isLoadingProducts: true,
+        ),
+      );
       try {
         Map<String, dynamic>? queryParameters;
         if (category.id != -1) {
           queryParameters = {'categoryId': category.id};
         }
-        
-        final response = await _apiService.get('products', queryParameters: queryParameters);
+
+        final response = await _apiService.get(
+          'products',
+          queryParameters: queryParameters,
+        );
         final List data = response.data;
         final products = data.map((e) => ProductModel.fromJson(e)).toList();
 
-        emit(HomeLoaded(
-          categories: currentState.categories,
-          products: products,
-          selectedCategory: category,
-          isLoadingProducts: false,
-        ));
+        emit(
+          HomeLoaded(
+            categories: currentState.categories,
+            products: products,
+            selectedCategory: category,
+            isLoadingProducts: false,
+          ),
+        );
       } catch (e) {
         emit(HomeError(e.toString().replaceAll('Exception: ', '')));
       }

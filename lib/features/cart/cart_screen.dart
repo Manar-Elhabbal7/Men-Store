@@ -1,3 +1,4 @@
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/theme/app_colors.dart';
@@ -5,19 +6,21 @@ import '../../models/cart_model.dart';
 import 'cubit/cart_cubit.dart';
 
 class MyCart extends StatelessWidget {
-  const MyCart({super.key});
+  final VoidCallback? onBackToHome;
+  const MyCart({super.key, this.onBackToHome});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CartCubit()..loadCart(),
-      child: const MyCartView(),
+      child: MyCartView(onBackToHome: onBackToHome),
     );
   }
 }
 
 class MyCartView extends StatelessWidget {
-  const MyCartView({super.key});
+  final VoidCallback? onBackToHome;
+  const MyCartView({super.key, this.onBackToHome});
 
   double get _shippingFee => 80.0;
 
@@ -29,9 +32,13 @@ class MyCartView extends StatelessWidget {
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () {
-            if (Navigator.canPop(context)) Navigator.pop(context);
+            if (onBackToHome != null) {
+              onBackToHome!();
+            } else if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
           },
         ),
         title: const Text(
@@ -136,13 +143,21 @@ class MyCartView extends StatelessWidget {
                     Flexible(
                       child: Text(
                         product.title,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => context.read<CartCubit>().removeProduct(product.id),
-                      child: const Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                      onTap: () =>
+                          context.read<CartCubit>().removeProduct(product.id),
+                      child: const Icon(
+                        Icons.delete_outline,
+                        color: Colors.red,
+                        size: 20,
+                      ),
                     ),
                   ],
                 ),
@@ -156,13 +171,18 @@ class MyCartView extends StatelessWidget {
                   children: [
                     Text(
                       '\$ ${product.price.toStringAsFixed(0)}',
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                     Row(
                       children: [
                         _buildQuantityBtn(
                           Icons.remove,
-                          () => context.read<CartCubit>().decrementQuantity(product.id),
+                          () => context.read<CartCubit>().decrementQuantity(
+                            product.id,
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -173,7 +193,9 @@ class MyCartView extends StatelessWidget {
                         ),
                         _buildQuantityBtn(
                           Icons.add,
-                          () => context.read<CartCubit>().incrementQuantity(product.id),
+                          () => context.read<CartCubit>().incrementQuantity(
+                            product.id,
+                          ),
                         ),
                       ],
                     ),
@@ -227,25 +249,46 @@ class MyCartView extends StatelessWidget {
             const SizedBox(height: 8),
             _buildSummaryRow('VAT (%)', '\$ 0.0'),
             const SizedBox(height: 8),
-            _buildSummaryRow('Shipping fee', '\$ ${_shippingFee.toStringAsFixed(0)}'),
+            _buildSummaryRow(
+              'Shipping fee',
+              '\$ ${_shippingFee.toStringAsFixed(0)}',
+            ),
             const Divider(height: 24),
-            _buildSummaryRow('Total', '\$ ${total.toStringAsFixed(0)}', isTotal: true),
+            _buildSummaryRow(
+              'Total',
+              '\$ ${total.toStringAsFixed(0)}',
+              isTotal: true,
+            ),
             const SizedBox(height: 20),
             SizedBox(
               width: double.infinity,
               height: 55,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  AnimatedSnackBar.material(
+                    'Checked out successfully!',
+                    type: AnimatedSnackBarType.success,
+                    mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                  ).show(context);
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   elevation: 0,
                 ),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Go To Checkout', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    Text(
+                      'Go To Checkout',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     SizedBox(width: 10),
                     Icon(Icons.arrow_forward),
                   ],

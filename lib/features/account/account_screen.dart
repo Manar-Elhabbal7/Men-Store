@@ -1,9 +1,12 @@
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:men_store/features/auth/login/login_screen.dart';
 import '../../core/theme/app_colors.dart';
 import 'address_screen.dart';
 
 class AccountScreen extends StatefulWidget {
-  const AccountScreen({super.key});
+  final VoidCallback? onBackToHome;
+  const AccountScreen({super.key, this.onBackToHome});
 
   @override
   State<AccountScreen> createState() => _AccountScreenState();
@@ -15,15 +18,20 @@ class _AccountScreenState extends State<AccountScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
-        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () {
-            if (Navigator.canPop(context)) Navigator.pop(context);
+            if (widget.onBackToHome != null) {
+              widget.onBackToHome!();
+            } else if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
           },
         ),
+        backgroundColor: AppColors.white,
+        elevation: 0,
         centerTitle: true,
+
         title: const Text(
           'Account',
           style: TextStyle(
@@ -36,23 +44,27 @@ class _AccountScreenState extends State<AccountScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 20),        
+            const SizedBox(height: 20),
             _buildMenuOption(
               icon: Icons.shopping_bag_outlined,
               title: 'My Orders',
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('My Orders screen coming soon!')),
-                );
+                AnimatedSnackBar.material(
+                  'My Orders screen coming soon!',
+                  type: AnimatedSnackBarType.info,
+                  mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                ).show(context);
               },
             ),
             _buildMenuOption(
               icon: Icons.person_outline_rounded,
               title: 'My Details',
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('My Details screen coming soon!')),
-                );
+                AnimatedSnackBar.material(
+                  'My Details screen coming soon!',
+                  type: AnimatedSnackBarType.info,
+                  mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                ).show(context);
               },
             ),
             _buildMenuOption(
@@ -61,7 +73,9 @@ class _AccountScreenState extends State<AccountScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AddressScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const AddressScreen(),
+                  ),
                 );
               },
             ),
@@ -69,18 +83,22 @@ class _AccountScreenState extends State<AccountScreen> {
               icon: Icons.help_outline_rounded,
               title: 'FAQs',
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('FAQs coming soon!')),
-                );
+                AnimatedSnackBar.material(
+                  'FAQs coming soon!',
+                  type: AnimatedSnackBarType.info,
+                  mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                ).show(context);
               },
             ),
             _buildMenuOption(
               icon: Icons.support_agent_rounded,
               title: 'Help Center',
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Help Center coming soon!')),
-                );
+                AnimatedSnackBar.material(
+                  'Help Center coming soon!',
+                  type: AnimatedSnackBarType.info,
+                  mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                ).show(context);
               },
             ),
             const SizedBox(height: 30),
@@ -92,7 +110,7 @@ class _AccountScreenState extends State<AccountScreen> {
       ),
     );
   }
-      
+
   Widget _buildMenuOption({
     required IconData icon,
     required String title,
@@ -112,7 +130,7 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
           child: Row(
             children: [
-              Icon(icon, color: Colors.black, size: 24),
+              Icon(icon, color: Colors.black87, size: 24),
               const SizedBox(width: 20),
               Text(
                 title,
@@ -123,7 +141,11 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               ),
               const Spacer(),
-              Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey[400], size: 16),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Colors.grey[400],
+                size: 16,
+              ),
             ],
           ),
         ),
@@ -140,8 +162,14 @@ class _AccountScreenState extends State<AccountScreen> {
         child: OutlinedButton.icon(
           onPressed: () {
             // Simulated logout
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Logged out successfully!')),
+            AnimatedSnackBar.material(
+              'Logged out successfully!',
+              type: AnimatedSnackBarType.success,
+              mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+            ).show(context);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
             );
           },
           icon: const Icon(Icons.logout_rounded, color: Colors.redAccent),

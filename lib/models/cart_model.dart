@@ -13,7 +13,8 @@ class CartResponse {
 
   factory CartResponse.fromJson(Map<String, dynamic> json) {
     return CartResponse(
-      carts: (json['carts'] as List?)
+      carts:
+          (json['carts'] as List?)
               ?.map((e) => CartModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
@@ -46,12 +47,14 @@ class CartModel {
   factory CartModel.fromJson(Map<String, dynamic> json) {
     return CartModel(
       id: int.tryParse(json['id']?.toString() ?? '') ?? 0,
-      products: (json['products'] as List?)
+      products:
+          (json['products'] as List?)
               ?.map((e) => CartProduct.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
       total: double.tryParse(json['total']?.toString() ?? '') ?? 0.0,
-      discountedTotal: double.tryParse(json['discountedTotal']?.toString() ?? '') ?? 0.0,
+      discountedTotal:
+          double.tryParse(json['discountedTotal']?.toString() ?? '') ?? 0.0,
       userId: int.tryParse(json['userId']?.toString() ?? '') ?? 0,
       totalProducts: int.tryParse(json['totalProducts']?.toString() ?? '') ?? 0,
       totalQuantity: int.tryParse(json['totalQuantity']?.toString() ?? '') ?? 0,
@@ -93,8 +96,10 @@ class CartProduct {
       price: double.tryParse(json['price']?.toString() ?? '') ?? 0.0,
       quantity: int.tryParse(json['quantity']?.toString() ?? '') ?? 0,
       total: double.tryParse(json['total']?.toString() ?? '') ?? 0.0,
-      discountPercentage: double.tryParse(json['discountPercentage']?.toString() ?? '') ?? 0.0,
-      discountedTotal: double.tryParse(json['discountedTotal']?.toString() ?? '') ?? 0.0,
+      discountPercentage:
+          double.tryParse(json['discountPercentage']?.toString() ?? '') ?? 0.0,
+      discountedTotal:
+          double.tryParse(json['discountedTotal']?.toString() ?? '') ?? 0.0,
       thumbnail: json['thumbnail']?.toString() ?? '',
       size: size,
     );
