@@ -5,8 +5,6 @@ import 'package:men_store/features/products/product_details_screen.dart';
 import 'package:men_store/features/cart/cart_screen.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../../models/product_model.dart';
-import '../../models/category_model.dart';
 import 'cubit/home_cubit.dart';
 
 class HomeScreen extends StatelessWidget {

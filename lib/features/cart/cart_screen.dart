@@ -1,75 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/theme/app_colors.dart';
+import '../../models/cart_model.dart';
+import 'cubit/cart_cubit.dart';
 
-class CartItem {
-  final String name;
-  final String size;
-  final double price;
-  int quantity;
-  final String imagePath;
-
-  CartItem({
-    required this.name,
-    required this.size,
-    required this.price,
-    required this.quantity,
-    required this.imagePath,
-  });
-}
-
-class MyCart extends StatefulWidget {
+class MyCart extends StatelessWidget {
   const MyCart({super.key});
 
   @override
-  State<MyCart> createState() => _MyCartState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => CartCubit()..loadCart(),
+      child: const MyCartView(),
+    );
+  }
 }
 
-class _MyCartState extends State<MyCart> {
-  final List<CartItem> _cartItems = [
-    CartItem(
-      name: 'Regular Fit Slogan',
-      size: 'Size L',
-      price: 1190.0,
-      quantity: 2,
-      imagePath: 'assets/images/t-shirt.png',
-    ),
-    CartItem(
-      name: 'Regular Fit Polo',
-      size: 'Size M',
-      price: 1100.0,
-      quantity: 1,
-      imagePath: 'assets/images/shoe.jpg',
-    ),
-  ];
+class MyCartView extends StatelessWidget {
+  const MyCartView({super.key});
 
-  double get _subtotal => _cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
   double get _shippingFee => 80.0;
-  double get _total => _subtotal + _shippingFee;
-
-  void _increment(int index) {
-    setState(() {
-      _cartItems[index].quantity++;
-    });
-  }
-
-  void _decrement(int index) {
-    if (_cartItems[index].quantity > 1) {
-      setState(() {
-        _cartItems[index].quantity--;
-      });
-    }
-  }
-
-  void _removeItem(int index) {
-    setState(() {
-      _cartItems[index].quantity = 0;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    final activeItems = _cartItems.where((item) => item.quantity > 0).toList();
-
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -78,8 +31,6 @@ class _MyCartState extends State<MyCart> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            // Since this is a tab in the bottom bar, 
-            // maybe we don't pop, but for now we follow the design.
             if (Navigator.canPop(context)) Navigator.pop(context);
           },
         ),
@@ -93,43 +44,76 @@ class _MyCartState extends State<MyCart> {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: activeItems.isEmpty
-                ? const Center(child: Text('Your cart is empty'))
-                : ListView.builder(
+      body: BlocBuilder<CartCubit, CartState>(
+        builder: (context, state) {
+          if (state is CartLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is CartError) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      state.message,
+                      style: const TextStyle(color: Colors.red, fontSize: 16),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () => context.read<CartCubit>().loadCart(),
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          } else if (state is CartLoaded) {
+            final cart = state.cart;
+            final products = cart.products;
+
+            if (products.isEmpty) {
+              return const Center(child: Text('Your cart is empty'));
+            }
+
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: activeItems.length,
+                    itemCount: products.length,
                     itemBuilder: (context, index) {
-                      final item = activeItems[index];
-                      // Find original index for state updates
-                      final originalIndex = _cartItems.indexOf(item);
-                      return _buildCartItem(item, originalIndex);
+                      final product = products[index];
+                      return _buildCartItem(context, product);
                     },
                   ),
-          ),
-          _buildSummarySection(),
-        ],
+                ),
+                _buildSummarySection(context, cart),
+              ],
+            );
+          }
+          return const SizedBox.shrink();
+        },
       ),
     );
   }
 
-  Widget _buildCartItem(CartItem item, int index) {
+  Widget _buildCartItem(BuildContext context, CartProduct product) {
     return Container(
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: Colors.grey.withOpacity(0.1)),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
       ),
       child: Row(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.asset(
-              item.imagePath,
+            child: Image.network(
+              product.thumbnail,
               width: 80,
               height: 80,
               fit: BoxFit.cover,
@@ -151,19 +135,19 @@ class _MyCartState extends State<MyCart> {
                   children: [
                     Flexible(
                       child: Text(
-                        item.name,
+                        product.title,
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => _removeItem(index),
+                      onTap: () => context.read<CartCubit>().removeProduct(product.id),
                       child: const Icon(Icons.delete_outline, color: Colors.red, size: 20),
                     ),
                   ],
                 ),
                 Text(
-                  item.size,
+                  product.size,
                   style: const TextStyle(color: Colors.grey, fontSize: 14),
                 ),
                 const SizedBox(height: 10),
@@ -171,20 +155,26 @@ class _MyCartState extends State<MyCart> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '\$ ${item.price.toStringAsFixed(0)}',
+                      '\$ ${product.price.toStringAsFixed(0)}',
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     Row(
                       children: [
-                        _buildQuantityBtn(Icons.remove, () => _decrement(index)),
+                        _buildQuantityBtn(
+                          Icons.remove,
+                          () => context.read<CartCubit>().decrementQuantity(product.id),
+                        ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Text(
-                            '${item.quantity}',
+                            '${product.quantity}',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
-                        _buildQuantityBtn(Icons.add, () => _increment(index)),
+                        _buildQuantityBtn(
+                          Icons.add,
+                          () => context.read<CartCubit>().incrementQuantity(product.id),
+                        ),
                       ],
                     ),
                   ],
@@ -203,7 +193,7 @@ class _MyCartState extends State<MyCart> {
       child: Container(
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.withOpacity(0.3)),
+          border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
           borderRadius: BorderRadius.circular(5),
         ),
         child: Icon(icon, size: 16, color: Colors.black),
@@ -211,7 +201,10 @@ class _MyCartState extends State<MyCart> {
     );
   }
 
-  Widget _buildSummarySection() {
+  Widget _buildSummarySection(BuildContext context, CartModel cart) {
+    final subtotal = cart.total;
+    final total = subtotal + _shippingFee;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
       decoration: BoxDecoration(
@@ -219,7 +212,7 @@ class _MyCartState extends State<MyCart> {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, -5),
           ),
@@ -230,13 +223,13 @@ class _MyCartState extends State<MyCart> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildSummaryRow('Sub-total', '\$ ${_subtotal.toStringAsFixed(0)}'),
+            _buildSummaryRow('Sub-total', '\$ ${subtotal.toStringAsFixed(0)}'),
             const SizedBox(height: 8),
-            _buildSummaryRow('VAT (%)', '\$ 0.00'),
+            _buildSummaryRow('VAT (%)', '\$ 0.0'),
             const SizedBox(height: 8),
             _buildSummaryRow('Shipping fee', '\$ ${_shippingFee.toStringAsFixed(0)}'),
             const Divider(height: 24),
-            _buildSummaryRow('Total', '\$ ${_total.toStringAsFixed(0)}', isTotal: true),
+            _buildSummaryRow('Total', '\$ ${total.toStringAsFixed(0)}', isTotal: true),
             const SizedBox(height: 20),
             SizedBox(
               width: double.infinity,
