@@ -31,7 +31,18 @@ class LoginCubit extends Cubit<LoginState> {
         emit(LoginFailure('Failed to login. Please try again.'));
       }
     } catch (e) {
-      emit(LoginFailure(e.toString().replaceAll('Exception: ', '')));
+      final errorMsg = e.toString().replaceAll('Exception: ', '');
+      if (errorMsg.toLowerCase().contains('unauthorized')) {
+        emit(LoginFailure('Incorrect email or password.'));
+      } else if (errorMsg.toLowerCase().contains('network') ||
+          errorMsg.toLowerCase().contains('connection') ||
+          errorMsg.toLowerCase().contains('timeout') ||
+          errorMsg.toLowerCase().contains('failed host lookup') ||
+          errorMsg.toLowerCase().contains('socketexception')) {
+        emit(LoginFailure('Network connection error. Please check your internet connection and try again.'));
+      } else {
+        emit(LoginFailure(errorMsg));
+      }
     }
   }
 }

@@ -1,77 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:men_store/features/products/product_details_screen.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../models/product_model.dart';
-import '../../core/network/api_service.dart';
-import 'product_details_screen.dart';
+import '../../models/category_model.dart';
+import 'cubit/home_cubit.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => HomeCubit()..loadHomeData(),
+      child: const HomeScreenView(),
+    );
+  }
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
-  String _selectedCategory = 'All';
-  List<ProductModel> _products = [];
-  bool _isLoading = true;
-
-  final List<String> _categories = ['All', 'Tshirts', 'Jeans', 'Shoes'];
+class HomeScreenView extends StatefulWidget {
+  const HomeScreenView({super.key});
 
   @override
-  void initState() {
-    super.initState();
-    _fetchProducts();
-  }
+  State<HomeScreenView> createState() => _HomeScreenViewState();
+}
 
-  Future<void> _fetchProducts() async {
-    setState(() => _isLoading = true);
-    try {
-      final response = await ApiService().get('products');
-      final List data = response.data;
-      setState(() {
-        _products = data.map((e) => ProductModel.fromJson(e)).toList();
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  List<ProductModel> get _filteredProducts {
-    if (_selectedCategory == 'All') return _products;
-    final categoryLower = _selectedCategory.toLowerCase();
-
-    return _products.where((product) {
-      final titleLower = product.title.toLowerCase();
-      final descLower = product.description.toLowerCase();
-      final catNameLower = product.category.name.toLowerCase();
-
-      if (categoryLower == 'tshirts') {
-        final keywords = ['t-shirt', 'tshirt', 'tee', 'shirt', 'polo'];
-        return keywords.any((keyword) =>
-            titleLower.contains(keyword) ||
-            descLower.contains(keyword) ||
-            catNameLower.contains(keyword));
-      } else if (categoryLower == 'jeans') {
-        final keywords = ['jeans', 'pants', 'chino', 'shorts', 'denim', 'trousers'];
-        return keywords.any((keyword) =>
-            titleLower.contains(keyword) ||
-            descLower.contains(keyword) ||
-            catNameLower.contains(keyword));
-      } else if (categoryLower == 'shoes') {
-        final keywords = ['shoes', 'shoe', 'sneaker'];
-        return keywords.any((keyword) =>
-            titleLower.contains(keyword) ||
-            descLower.contains(keyword) ||
-            catNameLower.contains(keyword));
-      }
-
-      return catNameLower.contains(categoryLower);
-    }).toList();
-  }
+class _HomeScreenViewState extends State<HomeScreenView> {
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -122,102 +78,127 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               const SizedBox(height: 20),
-              SizedBox(
-                height: 40,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _categories.length,
-                  separatorBuilder: (context, index) => const SizedBox(width: 10),
-                  itemBuilder: (context, index) {
-                    final isSelected = _selectedCategory == _categories[index];
-                    return GestureDetector(
-                      onTap: () => setState(() => _selectedCategory = _categories[index]),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: isSelected ? AppColors.primary : AppColors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: isSelected ? null : Border.all(color: AppColors.border.withValues(alpha: 0.5)),
-                        ),
-                        child: Text(
-                          _categories[index],
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : Colors.black54,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 20),
               Expanded(
-                child: _isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : GridView.builder(
-                        itemCount: _filteredProducts.length,
-                        padding: const EdgeInsets.only(bottom: 20),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.72,
-                          crossAxisSpacing: 15,
-                          mainAxisSpacing: 20,
-                        ),
-                        itemBuilder: (context, index) {
-                          final product = _filteredProducts[index];
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProductDetailsScreen(product: product),
-                                ),
-                              );
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
+                child: BlocBuilder<HomeCubit, HomeState>(
+                  builder: (context, state) {
+                    if (state is HomeLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is HomeLoaded) {
+                      return Column(
+                        children: [
+                          SizedBox(
+                            height: 40,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: state.categories.length,
+                              separatorBuilder: (context, index) => const SizedBox(width: 10),
+                              itemBuilder: (context, index) {
+                                final category = state.categories[index];
+                                final isSelected = state.selectedCategory.id == category.id;
+                                return GestureDetector(
+                                  onTap: () {
+                                    context.read<HomeCubit>().selectCategory(category);
+                                  },
                                   child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
                                     decoration: BoxDecoration(
-                                      color: AppColors.fill,
-                                      borderRadius: BorderRadius.circular(20),
+                                      color: isSelected ? AppColors.primary : AppColors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: isSelected ? null : Border.all(color: AppColors.border.withValues(alpha: 0.5)),
                                     ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: Image.network(
-                                        product.images.first,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.image_not_supported)),
+                                    child: Text(
+                                      category.name,
+                                      style: TextStyle(
+                                        color: isSelected ? Colors.white : Colors.black54,
+                                        fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                                       ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  product.title,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '\$ ${product.price}',
-                                  style: const TextStyle(
-                                    color: Colors.black54,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                          const SizedBox(height: 20),
+                          Expanded(
+                            child: state.isLoadingProducts
+                                ? const Center(child: CircularProgressIndicator())
+                                : GridView.builder(
+                                    itemCount: state.products.length,
+                                    padding: const EdgeInsets.only(bottom: 20),
+                                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      childAspectRatio: 0.72,
+                                      crossAxisSpacing: 15,
+                                      mainAxisSpacing: 20,
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      final product = state.products[index];
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => ProductDetailsScreen(product: product),
+                                            ),
+                                          );
+                                        },
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.fill,
+                                                  borderRadius: BorderRadius.circular(20),
+                                                ),
+                                                child: ClipRRect(
+                                                  borderRadius: BorderRadius.circular(20),
+                                                  child: Image.network(
+                                                    product.images.first,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.image_not_supported)),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            Text(
+                                              product.title,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              '\$ ${product.price}',
+                                              style: const TextStyle(
+                                                color: Colors.black54,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                          ),
+                        ],
+                      );
+                    } else if (state is HomeError) {
+                      return Center(
+                        child: Text(
+                          state.message,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
               ),
             ],
           ),
