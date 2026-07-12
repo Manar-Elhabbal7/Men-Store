@@ -246,9 +246,7 @@ class _HomeScreenViewState extends State<HomeScreenView> {
     if (_selectedIndex == 0) {
       body = _buildHomeBody(context);
     } else if (_selectedIndex == 1) {
-      body = MyCart(
-        onBackToHome: () => setState(() => _selectedIndex = 0),
-      );
+      body = MyCart(onBackToHome: () => setState(() => _selectedIndex = 0));
     } else {
       //todo: add account screen
       body = AccountScreen(
