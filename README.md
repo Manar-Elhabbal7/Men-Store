@@ -7,6 +7,8 @@ A sleek, modern, and responsive men's fashion e-commerce mobile application buil
 - 📱 **Sleek UI Design**: Modern and clean design system with custom cards, buttons, and navigation.
 - 🔍 **Smart Product Filtering**: Responsive grid layout with quick-action category tabs (All, T-Shirts, Jeans, Shoes) using search keyword scanning (scans titles, descriptions, and category metadata).
 - 🛍️ **Product Details Screen**: Full details view with product specifications, pricing, responsive zoom/image galleries, and reviews.
+-  **Add to Cart** : add to cart screen and allow to increment and decrement number of items needed and checkout
+-  **Account Screen** : allow logout 
 -  **REST API Integration**: Dynamic product loading from external API endpoints using standard Dio clients.
 -  **Optimized Performance**: Fast image caching and state management for fluid performance.
 
@@ -42,31 +44,22 @@ A sleek, modern, and responsive men's fashion e-commerce mobile application buil
   </tr>
   <tr>
     <td align="center">Home Categories</td>
-    <td align="center">T-Shirts</td>
-    <td align="center">Shoes</td>
+    <td align="center">Apply Filter(T-Shirts)</td>
+    <td align="center">Apply Filter(Shoes)</td>
     <td align="center">Product Details</td>
+  </tr>
+  <tr>
+     <td><img src="https://github.com/user-attachments/assets/e6112371-bee0-4aef-bccd-a01c064d10f3" width="180"/></td>
+    <td><img src="https://github.com/user-attachments/assets/b74be21a-bb75-4199-ad57-9e62e39e1be0" width="180"/></td>
+  </tr>
+  <tr>
+    <td align="center">Cart Screen</td>
+    <td align="center">Account Screen</td>
   </tr>
 </table>
 
-## Project Structure
+## Demo 
 
-```
-lib/
-├── core/
-│   ├── network/       # API clients and network helpers
-│   └── theme/         # AppColors, TextStyles, and theme configs
-├── features/
-│   ├── auth/          # Authentication flows and pages
-│   └── home/          # Home screen, product list, search, details
-└── models/            # JSON data parsing and model definitions
-```
+https://github.com/user-attachments/assets/ff3fb30c-f210-41ef-88ff-8d069877ac4e
 
-## Getting Started
 
-Follow these steps to set up and run the project locally.
-
-### Prerequisites
-
-- [Flutter SDK](https://docs.flutter.dev/get-started/install) (latest stable version)
-- Dart SDK
-- An Android/iOS Emulator or Physical Device
