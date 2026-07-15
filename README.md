@@ -1,6 +1,6 @@
 # Men Store - Flutter E-Commerce Application
 
-A sleek, modern, and responsive men's fashion e-commerce mobile application built with Flutter. The app integrates with a REST API to dynamically fetch and display product catalogs, featuring a polished UI, smart filtering, and rich product detail screens.
+A sleek, modern, and responsive men's fashion e-commerce mobile application built with Flutter. The app integrates with a REST API to dynamically fetch and display product catalogs, featuring a polished UI, smart filtering, and rich product detail screens.My Project also Support arabic language and switch between Arabic and English using localization
 
 ---
 ## Screens
@@ -26,7 +26,7 @@ A sleek, modern, and responsive men's fashion e-commerce mobile application buil
     <td><img src="https://github.com/user-attachments/assets/bdfb1535-b457-478a-9dcb-7fe70bcbba61" width="170"/></td>
     <td><img src="https://github.com/user-attachments/assets/78b750c0-6cf6-4b4a-b15a-2bd79c39b6da" width="170"/></td>
     <td><img src="https://github.com/user-attachments/assets/e6112371-bee0-4aef-bccd-a01c064d10f3" width="170"/></td>
-    <td><img src="https://github.com/user-attachments/assets/b74be21a-bb75-4199-ad57-9e62e39e1be0" width="170"/></td>
+    <td><img src="https://github.com/user-attachments/assets/3aba4908-38e2-460b-981f-f0b7f8954126" width="170"/></td>
   </tr>
   <tr>
     <td align="center"><b>Apply Filter (T-Shirts)</b></td>
@@ -34,6 +34,21 @@ A sleek, modern, and responsive men's fashion e-commerce mobile application buil
     <td align="center"><b>Product Details</b></td>
     <td align="center"><b>Cart Screen</b></td>
     <td align="center"><b>Account Screen</b></td>
+  </tr>
+</table>
+
+## Arabic Language Support
+
+<table>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/bc9cf58f-c657-41e7-a3b3-21730057f2a7" width="170"/></td>
+    <td><img src="https://github.com/user-attachments/assets/acc2c095-143b-4614-9026-a98f9c036e8e" width="170"/></td>
+    <td><img src="https://github.com/user-attachments/assets/313f25ea-ba6a-4a33-a487-e53470ad3b14" width="170"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Account Screen (Arabic)</b></td>
+    <td align="center"><b>Home Screen (Arabic)</b></td>
+    <td align="center"><b>Cart Screen (Arabic)</b></td>
   </tr>
 </table>
 
