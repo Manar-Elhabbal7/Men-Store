@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:men_store/l10n/app_localizations.dart';
 import 'package:men_store/features/account/account_screen.dart';
 import 'package:men_store/features/products/product_details_screen.dart';
 import 'package:men_store/features/cart/cart_screen.dart';
@@ -30,6 +31,7 @@ class _HomeScreenViewState extends State<HomeScreenView> {
   int _selectedIndex = 0;
 
   Widget _buildHomeBody(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -37,9 +39,9 @@ class _HomeScreenViewState extends State<HomeScreenView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-            const Text(
-              'Discover',
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            Text(
+              l10n.discover,
+              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             Row(
@@ -47,7 +49,7 @@ class _HomeScreenViewState extends State<HomeScreenView> {
                 Expanded(
                   child: TextField(
                     decoration: InputDecoration(
-                      hintText: 'Search for clothes...',
+                      hintText: l10n.searchPlaceholder,
                       hintStyle: AppTextStyles.hintStyle,
                       prefixIcon: Icon(Icons.search, color: AppColors.sub),
                       filled: true,
@@ -242,6 +244,7 @@ class _HomeScreenViewState extends State<HomeScreenView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     Widget body;
     if (_selectedIndex == 0) {
       body = _buildHomeBody(context);
@@ -265,21 +268,21 @@ class _HomeScreenViewState extends State<HomeScreenView> {
         elevation: 10,
         type: BottomNavigationBarType.fixed,
         onTap: (index) => setState(() => _selectedIndex = index),
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Home',
+            icon: const Icon(Icons.home_outlined),
+            activeIcon: const Icon(Icons.home),
+            label: l10n.home,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart_outlined),
-            activeIcon: Icon(Icons.shopping_cart),
-            label: 'Cart',
+            icon: const Icon(Icons.shopping_cart_outlined),
+            activeIcon: const Icon(Icons.shopping_cart),
+            label: l10n.cart,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Account',
+            icon: const Icon(Icons.person_outline),
+            activeIcon: const Icon(Icons.person),
+            label: l10n.account,
           ),
         ],
       ),

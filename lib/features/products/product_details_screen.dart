@@ -1,5 +1,6 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:men_store/l10n/app_localizations.dart';
 import '../../core/theme/app_colors.dart';
 import '../../models/product_model.dart';
 
@@ -9,6 +10,7 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -18,9 +20,9 @@ class ProductDetailsScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Details',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        title: Text(
+          l10n.details,
+          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -125,9 +127,9 @@ class ProductDetailsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text(
-                      'Price',
-                      style: TextStyle(
+                    Text(
+                      l10n.price,
+                      style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -150,7 +152,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     child: ElevatedButton.icon(
                       onPressed: () {
                         AnimatedSnackBar.material(
-                          'Added to Cart successfully!',
+                          l10n.addedToCartSuccess,
                           type: AnimatedSnackBarType.success,
                           mobileSnackBarPosition: MobileSnackBarPosition.bottom,
                         ).show(context);
@@ -159,9 +161,9 @@ class ProductDetailsScreen extends StatelessWidget {
                         Icons.shopping_bag_outlined,
                         color: Colors.white,
                       ),
-                      label: const Text(
-                        'Add to Cart',
-                        style: TextStyle(
+                      label: Text(
+                        l10n.addToCart,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),

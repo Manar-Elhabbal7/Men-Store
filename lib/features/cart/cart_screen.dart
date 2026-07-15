@@ -1,6 +1,7 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:men_store/l10n/app_localizations.dart';
 import '../../core/theme/app_colors.dart';
 import '../../models/cart_model.dart';
 import 'cubit/cart_cubit.dart';
@@ -26,6 +27,7 @@ class MyCartView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -41,9 +43,9 @@ class MyCartView extends StatelessWidget {
             }
           },
         ),
-        title: const Text(
-          'My Cart',
-          style: TextStyle(
+        title: Text(
+          l10n.myCart,
+          style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -70,7 +72,7 @@ class MyCartView extends StatelessWidget {
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () => context.read<CartCubit>().loadCart(),
-                      child: const Text('Retry'),
+                      child: Text(l10n.retry),
                     ),
                   ],
                 ),
@@ -81,7 +83,7 @@ class MyCartView extends StatelessWidget {
             final products = cart.products;
 
             if (products.isEmpty) {
-              return const Center(child: Text('Your cart is empty'));
+              return Center(child: Text(l10n.cartEmpty));
             }
 
             return Column(
@@ -224,6 +226,7 @@ class MyCartView extends StatelessWidget {
   }
 
   Widget _buildSummarySection(BuildContext context, CartModel cart) {
+    final l10n = AppLocalizations.of(context)!;
     final subtotal = cart.total;
     final total = subtotal + _shippingFee;
 
@@ -245,17 +248,17 @@ class MyCartView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildSummaryRow('Sub-total', '\$ ${subtotal.toStringAsFixed(0)}'),
+            _buildSummaryRow(l10n.subTotal, '\$ ${subtotal.toStringAsFixed(0)}'),
             const SizedBox(height: 8),
-            _buildSummaryRow('VAT (%)', '\$ 0.0'),
+            _buildSummaryRow(l10n.vat, '\$ 0.0'),
             const SizedBox(height: 8),
             _buildSummaryRow(
-              'Shipping fee',
+              l10n.shippingFee,
               '\$ ${_shippingFee.toStringAsFixed(0)}',
             ),
             const Divider(height: 24),
             _buildSummaryRow(
-              'Total',
+              l10n.total,
               '\$ ${total.toStringAsFixed(0)}',
               isTotal: true,
             ),
@@ -266,7 +269,7 @@ class MyCartView extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   AnimatedSnackBar.material(
-                    'Checked out successfully!',
+                    l10n.checkedOutSuccess,
                     type: AnimatedSnackBarType.success,
                     mobileSnackBarPosition: MobileSnackBarPosition.bottom,
                   ).show(context);
@@ -279,18 +282,18 @@ class MyCartView extends StatelessWidget {
                   ),
                   elevation: 0,
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Go To Checkout',
-                      style: TextStyle(
+                      l10n.checkout,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(width: 10),
-                    Icon(Icons.arrow_forward),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.arrow_forward),
                   ],
                 ),
               ),

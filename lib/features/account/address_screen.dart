@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:men_store/l10n/app_localizations.dart';
 import '../../core/network/api_service.dart';
 import '../../core/theme/app_colors.dart';
 import '../../models/location_model.dart';
@@ -45,6 +46,7 @@ class _AddressScreenState extends State<AddressScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -54,9 +56,9 @@ class _AddressScreenState extends State<AddressScreen> {
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Address',
-          style: TextStyle(
+        title: Text(
+          l10n.address,
+          style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -69,7 +71,7 @@ class _AddressScreenState extends State<AddressScreen> {
   }
 
   Widget _buildBody() {
-    const Text('Saved Address');
+    final l10n = AppLocalizations.of(context)!;
     if (_isLoading) {
       return const Center(
         child: CircularProgressIndicator(
@@ -96,7 +98,7 @@ class _AddressScreenState extends State<AddressScreen> {
               ElevatedButton.icon(
                 onPressed: _fetchAddresses,
                 icon: const Icon(Icons.refresh),
-                label: const Text('Try Again'),
+                label: Text(l10n.tryAgain),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
@@ -116,10 +118,10 @@ class _AddressScreenState extends State<AddressScreen> {
     }
 
     if (_addresses.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
-          'No addresses saved.',
-          style: TextStyle(fontSize: 16, color: Colors.grey),
+          l10n.noAddresses,
+          style: const TextStyle(fontSize: 16, color: Colors.grey),
         ),
       );
     }
@@ -194,7 +196,7 @@ class _AddressScreenState extends State<AddressScreen> {
                               borderRadius: BorderRadius.circular(5),
                             ),
                             child: Text(
-                              'default',
+                              l10n.defaultAddress,
                               style: TextStyle(
                                 color: Colors.grey[700],
                                 fontSize: 10,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
+import 'package:men_store/l10n/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_form_field.dart';
@@ -58,6 +59,7 @@ class _SignupScreenState extends State<SignupScreen> {
           }
         },
         builder: (context, state) {
+          final l10n = AppLocalizations.of(context)!;
           return Scaffold(
             backgroundColor: AppColors.white,
             appBar: AppBar(
@@ -76,25 +78,25 @@ class _SignupScreenState extends State<SignupScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 20),
-                      const Text(
-                        'Create an account',
-                        style: TextStyle(
+                      Text(
+                        l10n.createAccount,
+                        style: const TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        'Let’s create your account.',
-                        style: TextStyle(color: AppColors.sub, fontSize: 14),
+                      Text(
+                        l10n.letsCreateAccount,
+                        style: const TextStyle(color: AppColors.sub, fontSize: 14),
                       ),
                       const SizedBox(height: 30),
 
                       // Full Name Field
-                      const Text(
-                        'Full Name',
-                        style: TextStyle(
+                      Text(
+                        l10n.fullName,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                           color: Colors.black,
@@ -103,15 +105,15 @@ class _SignupScreenState extends State<SignupScreen> {
                       const SizedBox(height: 10),
                       AppFormField(
                         controller: _fullNameController,
-                        hintText: 'Enter your full name',
+                        hintText: l10n.enterFullName,
                       ),
 
                       const SizedBox(height: 20),
 
                       // Email Address Field
-                      const Text(
-                        'Email Address',
-                        style: TextStyle(
+                      Text(
+                        l10n.emailAddress,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                           color: Colors.black,
@@ -120,15 +122,15 @@ class _SignupScreenState extends State<SignupScreen> {
                       const SizedBox(height: 10),
                       AppFormField(
                         controller: _emailController,
-                        hintText: 'Enter your email address',
+                        hintText: l10n.enterEmail,
                       ),
 
                       const SizedBox(height: 20),
 
                       // Password Field
-                      const Text(
-                        'Password',
-                        style: TextStyle(
+                      Text(
+                        l10n.password,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                           color: Colors.black,
@@ -137,15 +139,15 @@ class _SignupScreenState extends State<SignupScreen> {
                       const SizedBox(height: 10),
                       AppPasswordField(
                         controller: _passwordController,
-                        hintText: 'Enter your password',
+                        hintText: l10n.enterPassword,
                       ),
 
                       const SizedBox(height: 20),
 
                       // Confirm Password Field
-                      const Text(
-                        'Confirm Password',
-                        style: TextStyle(
+                      Text(
+                        l10n.confirmPassword,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                           color: Colors.black,
@@ -154,7 +156,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       const SizedBox(height: 10),
                       AppPasswordField(
                         controller: _confirmPasswordController,
-                        hintText: 'Confirm your password',
+                        hintText: l10n.confirmYourPassword,
                       ),
 
                       const SizedBox(height: 40),
@@ -164,7 +166,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         const Center(child: CircularProgressIndicator())
                       else
                         AppButton(
-                          text: 'Create Account',
+                          text: l10n.signUp,
                           onPressed: () {
                             context.read<SignupCubit>().signup(
                               fullName: _fullNameController.text,
@@ -188,16 +190,16 @@ class _SignupScreenState extends State<SignupScreen> {
                               Navigator.pop(context);
                             },
                             child: RichText(
-                              text: const TextSpan(
-                                text: "Already have an account? ",
-                                style: TextStyle(
+                              text: TextSpan(
+                                text: l10n.alreadyHaveAccount,
+                                style: const TextStyle(
                                   color: Colors.black54,
                                   fontSize: 14,
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: 'Log In',
-                                    style: TextStyle(
+                                    text: l10n.login,
+                                    style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
                                     ),

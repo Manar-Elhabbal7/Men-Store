@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
+import 'package:men_store/l10n/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_form_field.dart';
@@ -53,6 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         },
         builder: (context, state) {
+          final l10n = AppLocalizations.of(context)!;
           return Scaffold(
             backgroundColor: AppColors.white,
             appBar: AppBar(backgroundColor: AppColors.white, elevation: 0),
@@ -64,25 +66,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 20),
-                      const Text(
-                        'Login to your account',
-                        style: TextStyle(
+                      Text(
+                        l10n.loginTitle,
+                        style: const TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        'It’s great to see you again.',
-                        style: TextStyle(color: AppColors.sub, fontSize: 14),
+                      Text(
+                        l10n.loginSubtitle,
+                        style: const TextStyle(color: AppColors.sub, fontSize: 14),
                       ),
                       const SizedBox(height: 40),
 
                       // Email Address Field
-                      const Text(
-                        'Email Address',
-                        style: TextStyle(
+                      Text(
+                        l10n.emailAddress,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                           color: Colors.black,
@@ -91,15 +93,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 10),
                       AppFormField(
                         controller: _emailController,
-                        hintText: 'Enter your email address',
+                        hintText: l10n.enterEmail,
                       ),
 
                       const SizedBox(height: 25),
 
                       // Password Field
-                      const Text(
-                        'Password',
-                        style: TextStyle(
+                      Text(
+                        l10n.password,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                           color: Colors.black,
@@ -108,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 10),
                       AppPasswordField(
                         controller: _passwordController,
-                        hintText: 'Enter your password',
+                        hintText: l10n.enterPassword,
                       ),
 
                       const SizedBox(height: 50),
@@ -118,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const Center(child: CircularProgressIndicator())
                       else
                         AppButton(
-                          text: 'Sign In',
+                          text: l10n.signIn,
                           onPressed: () {
                             context.read<LoginCubit>().login(
                               email: _emailController.text,
@@ -145,16 +147,16 @@ class _LoginScreenState extends State<LoginScreen> {
                               );
                             },
                             child: RichText(
-                              text: const TextSpan(
-                                text: "Don't have an account? ",
-                                style: TextStyle(
+                              text: TextSpan(
+                                text: l10n.dontHaveAccount,
+                                style: const TextStyle(
                                   color: Colors.black54,
                                   fontSize: 14,
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: 'Join',
-                                    style: TextStyle(
+                                    text: l10n.join,
+                                    style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
                                     ),

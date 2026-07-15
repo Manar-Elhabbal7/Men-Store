@@ -1,6 +1,9 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:men_store/l10n/app_localizations.dart';
 import 'package:men_store/features/auth/login/login_screen.dart';
+import '../../core/localization/locale_cubit.dart';
 import '../../core/theme/app_colors.dart';
 import 'address_screen.dart';
 
@@ -15,6 +18,7 @@ class AccountScreen extends StatefulWidget {
 class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -31,10 +35,9 @@ class _AccountScreenState extends State<AccountScreen> {
         backgroundColor: AppColors.white,
         elevation: 0,
         centerTitle: true,
-
-        title: const Text(
-          'Account',
-          style: TextStyle(
+        title: Text(
+          l10n.account,
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -47,10 +50,10 @@ class _AccountScreenState extends State<AccountScreen> {
             const SizedBox(height: 20),
             _buildMenuOption(
               icon: Icons.shopping_bag_outlined,
-              title: 'My Orders',
+              title: l10n.myOrders,
               onTap: () {
                 AnimatedSnackBar.material(
-                  'My Orders screen coming soon!',
+                  l10n.ordersComingSoon,
                   type: AnimatedSnackBarType.info,
                   mobileSnackBarPosition: MobileSnackBarPosition.bottom,
                 ).show(context);
@@ -58,10 +61,10 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
             _buildMenuOption(
               icon: Icons.person_outline_rounded,
-              title: 'My Details',
+              title: l10n.myDetails,
               onTap: () {
                 AnimatedSnackBar.material(
-                  'My Details screen coming soon!',
+                  l10n.detailsComingSoon,
                   type: AnimatedSnackBarType.info,
                   mobileSnackBarPosition: MobileSnackBarPosition.bottom,
                 ).show(context);
@@ -69,7 +72,7 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
             _buildMenuOption(
               icon: Icons.location_on_outlined,
-              title: 'Address Book',
+              title: l10n.addressBook,
               onTap: () {
                 Navigator.push(
                   context,
@@ -79,12 +82,13 @@ class _AccountScreenState extends State<AccountScreen> {
                 );
               },
             ),
+            _buildLanguageOption(context),
             _buildMenuOption(
               icon: Icons.help_outline_rounded,
-              title: 'FAQs',
+              title: l10n.faqs,
               onTap: () {
                 AnimatedSnackBar.material(
-                  'FAQs coming soon!',
+                  l10n.faqsComingSoon,
                   type: AnimatedSnackBarType.info,
                   mobileSnackBarPosition: MobileSnackBarPosition.bottom,
                 ).show(context);
@@ -92,10 +96,10 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
             _buildMenuOption(
               icon: Icons.support_agent_rounded,
-              title: 'Help Center',
+              title: l10n.helpCenter,
               onTap: () {
                 AnimatedSnackBar.material(
-                  'Help Center coming soon!',
+                  l10n.helpComingSoon,
                   type: AnimatedSnackBarType.info,
                   mobileSnackBarPosition: MobileSnackBarPosition.bottom,
                 ).show(context);
@@ -103,7 +107,7 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
             const SizedBox(height: 30),
             // Log Out Button
-            _buildLogoutButton(),
+            _buildLogoutButton(l10n),
             const SizedBox(height: 40),
           ],
         ),
@@ -153,7 +157,65 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
-  Widget _buildLogoutButton() {
+  Widget _buildLanguageOption(BuildContext context) {
+    final locale = Localizations.localeOf(context);
+    final l10n = AppLocalizations.of(context)!;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.language_rounded, color: Colors.black87, size: 24),
+            const SizedBox(width: 20),
+            Text(
+              l10n.language,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const Spacer(),
+            DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: locale.languageCode,
+                icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+                alignment: Alignment.centerRight,
+                onChanged: (String? newLanguage) {
+                  if (newLanguage != null) {
+                    context.read<LocaleCubit>().changeLocale(newLanguage);
+                  }
+                },
+                items: const [
+                  DropdownMenuItem(
+                    value: 'en',
+                    child: Text('English'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'ar',
+                    child: Text('العربية'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLogoutButton(AppLocalizations l10n) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
@@ -163,7 +225,7 @@ class _AccountScreenState extends State<AccountScreen> {
           onPressed: () {
             // Simulated logout
             AnimatedSnackBar.material(
-              'Logged out successfully!',
+              l10n.logoutSuccess,
               type: AnimatedSnackBarType.success,
               mobileSnackBarPosition: MobileSnackBarPosition.bottom,
             ).show(context);
@@ -173,9 +235,9 @@ class _AccountScreenState extends State<AccountScreen> {
             );
           },
           icon: const Icon(Icons.logout_rounded, color: Colors.redAccent),
-          label: const Text(
-            'Log Out',
-            style: TextStyle(
+          label: Text(
+            l10n.logOut,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Colors.redAccent,
